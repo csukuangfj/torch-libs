@@ -24,7 +24,11 @@ set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ version to be used.")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(torch-libs)
 
-message(STATUS "CMAKE_CXX_FLAGS: $CMAKE_CXX_FLAGS")
+message(STATUS "TORCH_LIBRARIES: ${TORCH_LIBRARIES}")
+message(STATUS "TORCH_CXX_FLAGS: ${TORCH_CXX_FLAGS}")
+
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 add_executable(main ./main.cc)
+target_link_libraries(main torch)
 target_link_libraries(main ${TORCH_LIBRARIES})

@@ -46,9 +46,9 @@ jobs:
 
           cmake \
             -D BUILD_SHARED_LIBS=ON \
-            -D GLIBCXX_USE_CXX11_ABI=ON \
+            -D GLIBCXX_USE_CXX11_ABI=OFF \
             ..
-          make
+          make VERBOSE=1
           ls -lh ./bin
 
           readelf -d ./bin/main

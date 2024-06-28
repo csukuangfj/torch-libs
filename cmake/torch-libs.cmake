@@ -1,5 +1,5 @@
 # Copyright (c)  2022-2023  Xiaomi Corporation
-function(download_torch_libs)
+macro(download_torch_libs)
   include(FetchContent)
 
   message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
@@ -24,7 +24,6 @@ function(download_torch_libs)
     message(STATUS "CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
     message(FATAL_ERROR "Only support Linux x64 at present. Will support other OSes later")
   endif()
-  set(onnxruntime_SOURCE_DIR ${onnxruntime_SOURCE_DIR} PARENT_SCOPE)
-endfunction()
+endmacro()
 
 download_torch_libs()
