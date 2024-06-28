@@ -1,6 +1,10 @@
 name: display shasum
 
 on:
+  push:
+    branches:
+      - master
+      - linux
   workflow_dispatch:
     inputs:
       version:
