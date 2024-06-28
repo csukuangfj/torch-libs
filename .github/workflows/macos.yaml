@@ -1,0 +1,78 @@
+name: macos
+
+on:
+  push:
+    branches:
+      - master
+      - linux
+
+  workflow_dispatch:
+
+concurrency:
+  group: linux-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-13
+            lib-type: "shared"
+            arch: "x64"
+
+          - os: macos-13
+            lib-type: "static"
+            arch: "x64"
+
+          - os: macos-14
+            lib-type: "shared"
+            arch: "arm64"
+
+          - os: macos-14
+            lib-type: "static"
+            arch: "arm64"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Display PWD
+        shell: bash
+        run: |
+          echo "pwd: $PWD"
+          ls -lh
+          du -h -d1 .
+
+      - name: Install deps
+        shell: bash
+        run: |
+          brew install protobuf
+
+      - name: Build
+        shell: bash
+        run: |
+          if [[ ${{ matrix.lib-type }} == "shared" ]]; then
+            BUILD_SHARED_LIBS=ON
+          else
+            BUILD_SHARED_LIBS=OFF
+          fi
+
+          mkdir build
+
+          cd build
+
+          cmake \
+            -D BUILD_SHARED_LIBS=$BUILD_SHARED_LIBS \
+            ..
+
+          make VERBOSE=1
+          ls -lh ./bin
+
+          readelf -d ./bin/main
+
+          ./bin/main
