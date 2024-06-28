@@ -48,3 +48,9 @@ jobs:
             -D BUILD_SHARED_LIBS=ON \
             -D GLIBCXX_USE_CXX11_ABI=ON \
             ..
+          make
+          ls -lh ./bin
+
+          readelf -d ./bin/main
+
+          ./bin/main
