@@ -10,23 +10,23 @@ if(NOT CMAKE_SYSTEM_PROCESSOR STREQUAL x86_64)
   message(FATAL_ERROR "This file is for x86_64 only. Given: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-if(NOT BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "This file is for building shared libraries. BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
+if(BUILD_SHARED_LIBS)
+  message(FATAL_ERROR "This file is for building static libraries. BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 endif()
 
-set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-osx-x64-shared-v2.3.1.tar.bz2")
-set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-osx-x64-shared-v2.3.1.tar.bz2")
-set(torch_libs_HASH "SHA256=01cc43159dffe2eaa29db072c6282b64f4f72b095874ad43bf7488baa2fffa82")
+set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-osx-x64-static-v2.3.1.tar.bz2")
+set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-osx-x64-static-v2.3.1.tar.bz2")
+set(torch_libs_HASH "SHA256=0224e88f4525daac40e830db25350a18c8260ed983167fed6a19230e20b8e18d")
 
 # If you don't have access to the Internet,
 # please download torch-libs to one of the following locations.
 # You can add more if you want.
 set(possible_file_locations
-  $ENV{HOME}/Downloads/torch-osx-x64-shared-v2.3.1.tar.bz2
-  ${CMAKE_SOURCE_DIR}/torch-osx-x64-shared-v2.3.1.tar.bz2
-  ${CMAKE_BINARY_DIR}/torch-osx-x64-shared-v2.3.1.tar.bz2
-  /tmp/torch-osx-x64-shared-v2.3.1.tar.bz2
-  /star-fj/fangjun/download/github/torch-osx-x64-shared-v2.3.1.tar.bz2
+  $ENV{HOME}/Downloads/torch-osx-x64-static-v2.3.1.tar.bz2
+  ${CMAKE_SOURCE_DIR}/torch-osx-x64-static-v2.3.1.tar.bz2
+  ${CMAKE_BINARY_DIR}/torch-osx-x64-static-v2.3.1.tar.bz2
+  /tmp/torch-osx-x64-static-v2.3.1.tar.bz2
+  /star-fj/fangjun/download/github/torch-osx-x64-static-v2.3.1.tar.bz2
 )
 
 foreach(f IN LISTS possible_file_locations)

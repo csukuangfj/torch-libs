@@ -35,7 +35,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Display PWD
+      - name: Display SHASUM
         shell: bash
         run: |
           git lfs install
@@ -43,6 +43,8 @@ jobs:
           cd torch-libs
 
           version=${{ env.TORCH_VERSION }}
+
+          ls -lh *$version*.tar.bz2
 
           shasum -a 256 *$version*.tar.bz2
 
