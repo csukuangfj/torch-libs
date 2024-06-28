@@ -29,6 +29,8 @@ message(STATUS "TORCH_CXX_FLAGS: ${TORCH_CXX_FLAGS}")
 
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+
 add_executable(main ./main.cc)
 target_link_libraries(main torch)
 target_link_libraries(main ${TORCH_LIBRARIES})
