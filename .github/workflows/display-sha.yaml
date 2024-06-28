@@ -1,0 +1,48 @@
+name: display shasum
+
+on:
+  push:
+    branches:
+      - master
+      - linux
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version information (e.g., 2.3.1)"
+        required: true
+
+env:
+  TORCH_VERSION:
+    |- # Enter release tag name or version name in workflow_dispatch. Appropriate version if not specified
+    ${{ github.event.release.tag_name || github.event.inputs.version || '2.3.1' }}
+
+concurrency:
+  group: display-shasum-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  display-shasum:
+    name: Display shasum
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Display PWD
+        shell: bash
+        run: |
+          git lfs install
+          git clone https://huggingface.co/csukuangfj/torch-libs
+          cd torch-libs
+
+          version=${{ env.TORCH_VERSION }}
+
+          shasum -a 256 *$version*.tar.bz2
+

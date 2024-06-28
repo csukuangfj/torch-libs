@@ -71,11 +71,17 @@ jobs:
             ..
 
           make VERBOSE=1
+
           ls -lh ./bin
 
-          otool -L ./bin/main
-
           ./bin/main
+
+      - name: Display dependencies
+        shell: bash
+        run: |
+          ls -lh ./build/bin/main
+
+          otool -L ./build/bin/main
 
       - name: Display torch lib file sizes
         shell: bash
