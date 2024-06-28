@@ -32,6 +32,11 @@ jobs:
           ls -lh
           du -h -d1 .
 
+      - name: Install deps
+        shell: bash
+        run: |
+          sudo apt-get install -y libprotobuf-dev
+
       - name: Build
         shell: bash
         run: |
