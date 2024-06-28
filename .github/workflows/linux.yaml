@@ -19,6 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        lib-type: [shared, static]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,17 +41,36 @@ jobs:
       - name: Build
         shell: bash
         run: |
+          if [[ ${{ matrix.lib-type }} == "shared" ]]; then
+            BUILD_SHARED_LIBS=ON
+          else
+            BUILD_SHARED_LIBS=OFF
+          fi
+
           mkdir build
 
           cd build
 
           cmake \
-            -D BUILD_SHARED_LIBS=ON \
-            -D GLIBCXX_USE_CXX11_ABI=OFF \
+            -D BUILD_SHARED_LIBS=$BUILD_SHARED_LIBS \
             ..
-          make VERBOSE=1
-          ls -lh ./bin
 
-          readelf -d ./bin/main
+          make VERBOSE=1
 
           ./bin/main
+
+      - name: Display dependencies
+        shell: bash
+        run: |
+          ls -lh ./build/bin/main
+
+          readelf -d ./build/bin/main
+
+          ldd ./build/bin/main
+
+      - name: Display torch lib file sizes
+        shell: bash
+        run: |
+          ls -lh build/bin
+          echo "---"
+          ls -lh build/_deps/torch_libs-src/lib/

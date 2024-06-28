@@ -10,27 +10,23 @@ if(NOT CMAKE_SYSTEM_PROCESSOR STREQUAL x86_64)
   message(FATAL_ERROR "This file is for x86_64 only. Given: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-if(NOT BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "This file is for building shared libraries. BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
+if(BUILD_SHARED_LIBS)
+  message(FATAL_ERROR "This file is for building static libraries. BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 endif()
 
-if(NOT GLIBCXX_USE_CXX11_ABI)
-  message(FATAL_ERROR "This file is for CXX11 ABI. GLIBCXX_USE_CXX11_ABI: ${GLIBCXX_USE_CXX11_ABI}")
-endif()
-
-set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2")
-set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2")
-set(torch_libs_HASH "SHA256=134d34b5657bd9d7c3a548ab0dba631fcaaceddd13db07054c4710fd5e9d0c86")
+set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-linux-x64-static-v2.3.1.tar.bz2")
+set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-linux-x64-static-v2.3.1.tar.bz2")
+set(torch_libs_HASH "SHA256=60ce2c83a76e789bcc082d54a0d665e6bb296c2ab6c17c77d565ae3ca55ea189")
 
 # If you don't have access to the Internet,
 # please download torch-libs to one of the following locations.
 # You can add more if you want.
 set(possible_file_locations
-  $ENV{HOME}/Downloads/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2
-  ${CMAKE_SOURCE_DIR}/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2
-  ${CMAKE_BINARY_DIR}/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2
-  /tmp/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2
-  /star-fj/fangjun/download/github/torch-linux-x64-shared-cxx11-abi-yes-v2.3.1.tar.bz2
+  $ENV{HOME}/Downloads/torch-linux-x64-static-v2.3.1.tar.bz2
+  ${CMAKE_SOURCE_DIR}/torch-linux-x64-static-v2.3.1.tar.bz2
+  ${CMAKE_BINARY_DIR}/torch-linux-x64-static-v2.3.1.tar.bz2
+  /tmp/torch-linux-x64-static-v2.3.1.tar.bz2
+  /star-fj/fangjun/download/github/torch-linux-x64-static-v2.3.1.tar.bz2
 )
 
 foreach(f IN LISTS possible_file_locations)
@@ -70,4 +66,3 @@ message(STATUS "TORCH_CXX_FLAGS: ${TORCH_CXX_FLAGS}")
 
 include_directories(${torch_libs_SOURCE_DIR}/include/torch/csrc/api/include)
 include_directories(${torch_libs_SOURCE_DIR}/include)
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")

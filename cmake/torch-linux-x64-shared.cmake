@@ -14,23 +14,19 @@ if(NOT BUILD_SHARED_LIBS)
   message(FATAL_ERROR "This file is for building shared libraries. BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 endif()
 
-if(GLIBCXX_USE_CXX11_ABI)
-  message(FATAL_ERROR "This file is for pre-CXX11 ABI. GLIBCXX_USE_CXX11_ABI: ${GLIBCXX_USE_CXX11_ABI}")
-endif()
-
-set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2")
-set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2")
-set(torch_libs_HASH "SHA256=8af7203adddd6d8ce0d853615c8e8a33cc1fe377910a63b51de8c50228e35b83")
+set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-v2.3.1.tar.bz2")
+set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-linux-x64-shared-v2.3.1.tar.bz2")
+set(torch_libs_HASH "SHA256=6efdb5c3f344f980e431b0b1d4c5fc78c4bd6d1d9697212467928164885a7ae5")
 
 # If you don't have access to the Internet,
 # please download torch-libs to one of the following locations.
 # You can add more if you want.
 set(possible_file_locations
-  $ENV{HOME}/Downloads/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2
-  ${CMAKE_SOURCE_DIR}/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2
-  ${CMAKE_BINARY_DIR}/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2
-  /tmp/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2
-  /star-fj/fangjun/download/github/torch-linux-x64-shared-cxx11-abi-no-v2.3.1.tar.bz2
+  $ENV{HOME}/Downloads/torch-linux-x64-shared-v2.3.1.tar.bz2
+  ${CMAKE_SOURCE_DIR}/torch-linux-x64-shared-v2.3.1.tar.bz2
+  ${CMAKE_BINARY_DIR}/torch-linux-x64-shared-v2.3.1.tar.bz2
+  /tmp/torch-linux-x64-shared-v2.3.1.tar.bz2
+  /star-fj/fangjun/download/github/torch-linux-x64-shared-v2.3.1.tar.bz2
 )
 
 foreach(f IN LISTS possible_file_locations)
