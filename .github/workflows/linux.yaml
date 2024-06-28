@@ -31,3 +31,15 @@ jobs:
           echo "pwd: $PWD"
           ls -lh
           du -h -d1 .
+
+      - name: Build
+        shell: bash
+        run: |
+          mkdir build
+
+          cd build
+
+          cmake \
+            -D BUILD_SHARED_LIBS=ON \
+            -D GLIBCXX_USE_CXX11_ABI=ON \
+            ..
