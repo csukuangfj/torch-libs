@@ -1,0 +1,153 @@
+name: linux-aarch64
+
+on:
+  push:
+    branches:
+      - master
+      - linux
+
+  workflow_dispatch:
+
+concurrency:
+  group: linux-arch64-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux_aarch64:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        lib-type: [shared, static]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Display PWD
+        shell: bash
+        run: |
+          echo "pwd: $PWD"
+          ls -lh
+          du -h -d1 .
+
+      - name: cache-qemu
+        id: cache-qemu
+        uses: actions/cache@v4
+        with:
+          path: qemu-install
+          key: qemu-aarch64-install-20220908
+
+      - name: install-qemu-build-deps
+        if: steps.cache-qemu.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install autoconf automake autotools-dev ninja-build
+
+      - name: checkout-qemu
+        if: steps.cache-qemu.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: qemu/qemu
+          path: qemu
+          ref: f5643914a9e8f79c606a76e6a9d7ea82a3fc3e65
+
+      - name: qemu
+        if: steps.cache-qemu.outputs.cache-hit != 'true'
+        run: |
+          cd qemu
+          ./configure --prefix=$GITHUB_WORKSPACE/qemu-install --target-list=aarch64-linux-user --disable-system
+          make -j2
+          make install
+
+      - name: cache-toolchain
+        id: cache-toolchain
+        uses: actions/cache@v4
+        with:
+          path: toolchain
+          key: gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu.tar.xz
+
+      - name: Download toolchain
+        if: steps.cache-toolchain.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          wget -qq https://huggingface.co/csukuangfj/sherpa-ncnn-toolchains/resolve/main/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu.tar.xz
+
+          mkdir $GITHUB_WORKSPACE/toolchain
+          tar xf ./gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu.tar.xz --strip-components 1 -C $GITHUB_WORKSPACE/toolchain
+
+      - name: Display toolchain info
+        shell: bash
+        run: |
+          export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+          aarch64-none-linux-gnu-gcc --version
+
+      - name: Display qemu-aarch64 -h
+        shell: bash
+        run: |
+          export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
+          export QEMU_LD_PREFIX=$GITHUB_WORKSPACE/toolchain/aarch64-none-linux-gnu/libc
+          qemu-aarch64 -h
+
+      - name: Build
+        shell: bash
+        run: |
+          export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+
+          if [[ ${{ matrix.lib-type }} == "shared" ]]; then
+            BUILD_SHARED_LIBS=ON
+          else
+            BUILD_SHARED_LIBS=OFF
+          fi
+
+          mkdir build
+
+          cd build
+
+          cmake \
+            -D CMAKE_SYSTEM_PROCESSOR=aarch64 \
+            -D CMAKE_SYSTEM_NAME=Linux \
+            -D CMAKE_C_COMPILER=aarch64-none-linux-gnu-gcc \
+            -D CMAKE_CXX_COMPILER=aarch64-none-linux-gnu-g++ \
+            -D CMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+            -D CMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+            -D CMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+            -D CMAKE_CROSSCOMPILING=ON \
+            \
+            -D BUILD_SHARED_LIBS=$BUILD_SHARED_LIBS \
+            ..
+
+          make VERBOSE=1
+
+          ls -lh bin/main
+
+      - name: Test
+        shell: bash
+        run: |
+          ls -lh ./build/bin/main
+
+          export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+          export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
+          export QEMU_LD_PREFIX=$GITHUB_WORKSPACE/toolchain/aarch64-none-linux-gnu/libc
+
+          qemu-aarch64 ./build/bin/main
+
+
+      - name: Display dependencies
+        shell: bash
+        run: |
+          ls -lh ./build/bin/main
+
+          readelf -d ./build/bin/main
+
+          ldd ./build/bin/main
+
+      - name: Display torch lib file sizes
+        shell: bash
+        run: |
+          ls -lh build/bin
+          echo "---"
+          ls -lh build/_deps/torch_libs-src/lib/
