@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: linux-${{ github.ref }}
+  group: macos-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -47,12 +47,6 @@ jobs:
           echo "pwd: $PWD"
           ls -lh
           du -h -d1 .
-
-      - name: Install deps
-        shell: bash
-        run: |
-          # brew install protobuf
-          echo
 
       - name: Build
         shell: bash

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - linux
 
   workflow_dispatch:
 
@@ -32,12 +33,6 @@ jobs:
           echo "pwd: $PWD"
           ls -lh
           du -h -d1 .
-
-      - name: Install deps
-        shell: bash
-        run: |
-          # sudo apt-get install -y libprotobuf-dev
-          echo
 
       - name: Build
         shell: bash
