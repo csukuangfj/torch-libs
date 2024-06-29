@@ -16,7 +16,7 @@ endif()
 
 set(torch_libs_URL  "https://huggingface.co/csukuangfj/torch-libs/resolve/main/torch-osx-x64-static-v2.3.1.tar.bz2")
 set(torch_libs_URL2 "https://hf-mirror.com/csukuangfj/torch-libs/resolve/main/torch-osx-x64-static-v2.3.1.tar.bz2")
-set(torch_libs_HASH "SHA256=0224e88f4525daac40e830db25350a18c8260ed983167fed6a19230e20b8e18d")
+set(torch_libs_HASH "SHA256=f6c08f99cf0c0308125c697f59599ab429e8afd2359142a48920788d7ab40d60")
 
 # If you don't have access to the Internet,
 # please download torch-libs to one of the following locations.
